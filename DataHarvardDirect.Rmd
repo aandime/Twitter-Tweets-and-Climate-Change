@@ -1,0 +1,49 @@
+---
+title: "Carolina Data Challenge 2022"
+author: "Andy Dong"
+date: '2022-10-08'
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r setup, include=T,warning = F}
+library(tidytext)
+library(tidyverse)
+library(readr)
+library(rtweet)
+library(rvest)
+library(twitteR)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(curl)
+library(httpuv)
+library(rjson)
+library(jsonlite)
+```
+
+## Including Plots
+```{r, include = T, warning = F}
+data1 <- jsonlite::stream_in(file( "/Users/andydong/Downloads/dataverse_files/climate_id.jsonl"))
+```
+
+```{r, include = T, warning = F}
+data2<-
+  data1 %>%
+  rename(Tweets = id_str) %>%
+  select(-c(id))
+data2
+```
+```{r, include = T, warning = F}
+data3 <-
+  data2 %>%
+  filter(retweet_count >= 500)
+```
+
+```{r, include = T, warning = F}
+ggplot(data = data3, mapping = aes(x = created_at, y= retweet_count))+
+  geom_line() + labs(x = "Month", "Retweets")+ theme(
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
